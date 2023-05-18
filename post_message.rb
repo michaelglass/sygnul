@@ -13,10 +13,12 @@ params = {
 
 # Set the URI and path
 if true
-  uri = URI("http://localhost:80/")
+  # uri = URI("http://localhost:80/")
+  uri = URI("https://c8c6-131-239-192-194.ngrok-free.app/")
 
   # Create the HTTP objects
   http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = uri.scheme == "https"
 
   # Create the request object and set the body as the JSON payload
   request = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json')
