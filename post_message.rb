@@ -8,13 +8,26 @@ require 'securerandom'
 params = {
   "id" => SecureRandom.uuid,
   "author" => "butts.io",
-  "message" => ARGV[0]
+  "message" => ARGV[0],
+  "relayers" => []
+}
+
+people = {
+tony: "https://2792-131-239-192-194.ngrok-free.app/",
+dan: "https://0315-131-239-192-194.ngrok-free.app/",
+kyle: "https://f40d-131-239-192-194.ngrok-free.app/",
+doug: "https://dbbf-131-239-192-194.ngrok-free.app/",
+pierre: "https://5381-131-239-192-194.ngrok-free.app/",
+ayaz: "https://ae13-131-239-192-194.ngrok-free.app/",
+tommy: "https://eaf4-131-239-192-194.ngrok-free.app/",
+kars: "https://cdde-131-239-192-194.ngrok-free.app/",
+michael: "https://297a-131-239-192-194.ngrok-free.app/",
 }
 
 # Set the URI and path
 if true
   # uri = URI("http://localhost:80/")
-  uri = URI("https://297a-131-239-192-194.ngrok-free.app/")
+  uri = URI(people[:tony])
 
   # Create the HTTP objects
   http = Net::HTTP.new(uri.host, uri.port)
