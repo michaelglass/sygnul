@@ -14,7 +14,7 @@ params = {
 # Set the URI and path
 if true
   # uri = URI("http://localhost:80/")
-  uri = URI("https://147e-131-239-192-194.ngrok-free.app/")
+  uri = URI("https://297a-131-239-192-194.ngrok-free.app/")
 
   # Create the HTTP objects
   http = Net::HTTP.new(uri.host, uri.port)

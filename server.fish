@@ -16,6 +16,8 @@ set tony https://2792-131-239-192-194.ngrok-free.app/
 while true
     # Start a listener on port 80
     echo -e 'HTTP/1.1 200 OK\r\ncontent-length: 0\r\n\r\n' | nc -l 80 >$temp_file
+    echo "received message"
+    echo $temp_file
 
     # Extract the JSON payload
     set body (sed -n -e '/{/,$p' $temp_file | jq)
