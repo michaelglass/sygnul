@@ -24,27 +24,32 @@ while true
         echo "received blame, sending to kars"
         curl -d "$body" -H "Content-Type: application/json" -X POST $kars || echo "failed to blame"
     else
-        # Extract the required fields from the JSON
-        set id (echo $body | jq -r ".id")
-        set author (echo $body | jq -r ".author")
-        set message (echo $body | jq -r ".message")
-        set relayers (echo $body | jq -r '.relayers + ["butts.io"]')
+        if echo $body | jq 'has("id")' | grep -q true
+            # Extract the required fields from the JSON
+            set id (echo $body | jq -r ".id")
+            set author (echo $body | jq -r ".author")
+            set message (echo $body | jq -r ".message")
+            set relayers (echo $body | jq -r '.relayers + ["butts.io"]')
 
-        # Check if the id has been seen before
-        if grep -Fxq "$id" $ids_file
-            echo "Received again"
-        else
-            echo "$id" >>$ids_file
-            set body (jq -n --arg id "$id" --arg author "$author" --arg message "$message" --argjson relayers "$relayers" \
+            # Check if the id has been seen before
+            if grep -Fxq "$id" $ids_file
+                echo "Received again"
+            else
+                echo "$id" >>$ids_file
+                set body (jq -n --arg id "$id" --arg author "$author" --arg message "$message" --argjson relayers "$relayers" \
             '{id: $id, author: $author, message: $message, relayers: $relayers}')
-            echo $body
+                echo $body
 
-            # Send a POST request
-            # post to tony
-            if ! curl -d "$body" -H "Content-Type: application/json" -X POST $tony
-                echo "failed to send, blaming tony back to Kars"
-                curl -d '{"blame": "Tony"}' -H "Content-Type: application/json" -X POST $kars || echo "failed to blame"
+                # Send a POST request
+                # post to tony
+                if ! curl -d "$body" -H "Content-Type: application/json" -X POST $tony
+                    echo "failed to send, blaming tony back to Kars"
+                    curl -d '{"blame": "Tony"}' -H "Content-Type: application/json" -X POST $kars || echo "failed to blame"
+                end
             end
+        else
+            echo "failed to parse body, blaming tony back to Kars"
+            curl -d '{"blame": "Tony"}' -H "Content-Type: application/json" -X POST $kars || echo "failed to blame"
         end
     end
 end
