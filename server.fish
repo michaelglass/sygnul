@@ -13,8 +13,9 @@ echo $ids_file
 
 while true
     # Start a listener on port 80
+    echo -e 'HTTP/1.1 200 OK\r\ncontent-length: 0\r\n' | nc -l 80 >$temp_file
+
     # Extract the JSON payload
-    echo -e 'HTTP/1.1 200 OK\r\n\r\n' | nc -l 80 >$temp_file
     set body (sed -n -e '/{/,$p' $temp_file | jq)
 
     # Extract the required fields from the JSON
@@ -27,12 +28,12 @@ while true
     if grep -Fxq "$id" $ids_file
         echo "Received again"
     else
-        echo "$message"
         echo "$id" >>$ids_file
         set body (jq -n --arg id "$id" --arg author "$author" --arg message "$message" --argjson relayers "$relayers" \
           '{id: $id, author: $author, message: $message, relayers: $relayers}')
+        echo $body
 
         # Send a POST request
-        curl -d "$body" -H "Content-Type: application/json" -X POST https://dbbf-131-239-192-194.ngrok-free.app/
+        curl -d "$body" -H "Content-Type: application/json" -X POST https://eaf4-131-239-192-194.ngrok-free.app/
     end
 end
